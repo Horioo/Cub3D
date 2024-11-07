@@ -6,7 +6,7 @@ INC = inc/
 
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -g -I #-fsanitize=address
-MLX_FLAGS = minilibx-linux/libmlx.a -lXext -lX11
+MLX_FLAGS = minilibx-linux/libmlx.a -lXext -lX11 -lm
 GNL_FILES = gnl/get_next_line.c gnl/get_next_line_utils.c
 RM = rm -f
 

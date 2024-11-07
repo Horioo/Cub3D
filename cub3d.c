@@ -6,15 +6,18 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:13:39 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/10/16 11:22:32 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/11/07 13:04:17 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "inc/cub3d.h"
+#include <math.h>
 
 void	map_check(t_cube *cube, int x, int y)
 {
-	
+	(void)cube;
+	(void)x;
+	(void)y;
 }
 
 
@@ -122,12 +125,97 @@ int	close_game(t_cube *cube)
 	return (0);
 }
 
+// Desenhar as linhas de "visao" do player
+// x e y sao a posicao atual do player
+double degrees_to_radians(double degrees)
+{
+	return (degrees * (PI / 180.00));
+}
+
+//Dar fix ao drawing das linhas, matematica nao esta mathing
+void draw_line(t_cube *cube, int x, int y, int end_x, int end_y)
+{
+	int dist_x;
+	int dist_y;
+	int steps;
+	float x_increm;
+	float y_increm;
+	float new_x;
+	float new_y;
+	int i;
+	
+	dist_x = end_x - x;
+	dist_y = end_y - y;
+	steps = abs(dist_x) > abs(dist_y) ? abs(dist_x) : abs(dist_y);
+	x_increm = dist_x / (float)steps;
+	y_increm = dist_y / (float)steps;
+	i = 0;
+	new_x = x;
+	new_y = y;
+	while(i <= steps)
+	{
+		mlx_pixel_put(cube->mlx, cube->win, (int)new_x, (int)new_y, 0x00FFFF00);
+		new_x += x_increm;
+		new_y += y_increm;
+		i++;
+	}
+}
+
+void draw_lines(t_cube *cube, int x, int y)
+{
+	int i;
+	int n_lines;
+	int line_lenght;
+	double angle;
+	double radians;
+	int end_x;
+	int end_y;
+	
+	i = 0;
+	n_lines = 50;
+	line_lenght = 50;
+	while(i <= n_lines)
+	{
+		angle = i;
+		radians = degrees_to_radians(angle);
+		end_x = x + (int)(line_lenght * cos(radians));
+		end_y = y + (int)(line_lenght * sin(radians));
+		draw_line(cube, x, y, end_x, end_y);
+		i++;
+	}
+}
+
+void put_square(t_cube *cube, int x, int y, int color)
+{
+	int n_lines;
+	int n_rows;
+	int n_pixels;
+
+	n_lines = x;
+	n_pixels = 100;
+	while(n_lines <= x + n_pixels)
+	{
+		n_rows = y;
+		while(n_rows <= y + n_pixels)
+		{
+			mlx_pixel_put(cube->mlx, cube->win,n_lines, n_rows, color);
+			n_rows++;
+		}
+		n_lines++;
+	}
+	printf("x = %d\ny = %d\n", n_lines, n_rows - ((n_pixels + x) / 2));
+	draw_lines(cube, n_lines, n_rows);
+}
+
+
 int main(int ac, char **av)
 {
 	t_cube *cube;
 	check_errors(ac, av);
 	
 	cube = init_cube(av[1]);
+	
+	put_square(cube, 50, 50, 0x00FF0000);
 	mlx_hook(cube->win, 17, 0, close_game, cube);
 	mlx_loop(cube->mlx);
 

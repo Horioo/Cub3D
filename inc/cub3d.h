@@ -6,17 +6,19 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/10/16 11:34:45 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/11/07 11:47:08 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
+# define PI 3.14159265
 
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <math.h>
 # include <GL/gl.h>
 # include "../libft/libft.h"
 # include "../gnl/get_next_line.h"
