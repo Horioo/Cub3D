@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/11/08 11:21:55 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/11/12 11:27:47 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # define PI 3.14159265
 
 # include <stdio.h>
+# include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
@@ -31,15 +32,23 @@
 # define DOWN 115
 
 
+/*
+	Mapa e muitooooo diferente do mapa do so_long, tens menos regras para fazer mas pode ser mais dificil de o compreender, o mapa pode ter espacos e depois nos e que decidimos como lidamos com eles
+	so pode ter 6 tipos de char [0,1,N,S,W,A] - o NSWA e basicamente a posicao do player e para que direcao esta virado
+	O Mapa nao precisa de ser quadrado
+	Este gajo tem uma pagina fixe para ver https://hackmd.io/@nszl/H1LXByIE2
+
+	Fazer copia - +2 linhas (uma no inicio e outra no final), cada linha + 2 tamanho
+	E depois fazer o reverse_flood_fill(ideia do joao) de forma a que ele va de fora para dentro e se conseguir entrar entao da erro
+*/
+
 typedef struct s_cube
 {
 	void			*mlx;
 	void			*win;
-	// Mapa e muitooooo diferente do mapa do so_long, tens menos regras para fazer mas pode ser mais dificil de o compreender, o mapa pode ter espacos e depois nos e que decidimos como lidamos com eles
-	// so pode ter 6 tipos de char [0,1,N,S,W,A] - o NSWA e basicamente a posicao do player e para que direcao esta virado
-	// O Mapa nao precisa de ser quadrado
-	// Este gajo tem uma pagina fixe para ver https://hackmd.io/@nszl/H1LXByIE2
+
 	char			**map;
+	char			**rff_map;
 	
 	int				map_width;
 	int				map_height;

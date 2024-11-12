@@ -6,11 +6,11 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:13:39 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/11/08 11:32:49 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/11/12 12:52:32 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "inc/cub3d.h"
+#include "cub3d.h"
 #include <math.h>
 
 void	map_check(t_cube *cube, int x, int y)
@@ -20,6 +20,25 @@ void	map_check(t_cube *cube, int x, int y)
 	(void)y;
 }
 
+void print_map(char **map)
+{
+	int i;
+	int j;
+	
+	i = 0;
+	while(map[i] && map)
+	{
+		j = 0;
+		//printf("Linha %d: ", i);
+		while(map[i][j])
+		{
+			printf("%c", map[i][j]);
+			j++;
+		}
+		printf("\n");
+		i++;
+	}
+}
 
 int	ft_strcmp(char *s1, char *s2)
 {
@@ -40,6 +59,13 @@ int	colum_maps(char *file)
 	cnt = 0;
 	fd = open(file, O_RDONLY);
 	row = get_next_line(fd);
+	while(cnt != 8)
+	{
+		free(row);
+		row = get_next_line(fd);
+		cnt++;
+	}
+	cnt = 0;
 	while (row)
 	{
 		free(row);
@@ -65,6 +91,13 @@ char	**fill_map(char *file)
 	fd = open(file, O_RDONLY);
 	row = get_next_line(fd);
 	line = 0;
+	while(line != 8)
+	{
+		free(row);
+		row = get_next_line(fd);
+		line++;
+	}
+	line = 0;
 	while (row)
 	{
 		map[line++] = ft_strtrim(row, "\n");
@@ -77,6 +110,97 @@ char	**fill_map(char *file)
 	return (map);
 }
 
+int search_for_big_line(char **map)
+{
+	int i;
+	unsigned long line_lenght;
+	
+	i = 0;
+	line_lenght = 0;
+	while(map[i])
+	{
+		if(strlen(map[i]) > line_lenght)
+			line_lenght = strlen(map[i]);
+		i++;
+	}
+	return (line_lenght);
+}
+
+int check_map_coluns(char **map)
+{
+	int i;
+
+	i = 0;
+	while(map[i])
+		i++;
+	return (i);
+}
+
+char **alloc_map(int colums, int line_lenght)
+{
+	char **map;
+	int i;
+	
+	map = malloc(sizeof(char *) * colums);
+	if(!map)
+		return NULL;
+	i = 0;
+	while(map[i] && map)
+	{
+		map[i] = malloc(line_lenght);
+		i++;
+	}
+	map[i] = NULL;
+	return (map);
+}
+
+char *alloc_line(char *line, int big_line)
+{
+	char *new_line;
+	int i;
+
+	i = 0;
+	new_line = malloc(big_line);
+	new_line[0] = 'z';
+	while(line && line[i])
+	{
+		new_line[i + 1] = line[i];
+		i++;
+	}
+	while(i <= big_line)
+	{
+		new_line[i + 1] = 'z';
+		i++;
+	}
+	new_line[i] = 'z';
+	new_line[i + 1] = '\0';
+	return (new_line);
+}
+
+char **fill_rff_map(char **map)
+{
+	char **rff_map;
+	int cnt;
+	int big_line;
+	int i;
+	
+	cnt = check_map_coluns(map);
+	big_line = search_for_big_line(map);
+	i = 0;
+	rff_map = alloc_map(cnt + 3, big_line);
+	while(map[i])
+	{
+		if(i == 0)
+			rff_map[i] = alloc_line(NULL, big_line);
+		else
+			rff_map[i] = alloc_line(map[i], big_line);
+		i++;
+	}
+	rff_map[i] = alloc_line(NULL, big_line);
+	print_map(rff_map);
+	return (rff_map);
+}
+
 t_cube *init_cube(char *file)
 {
 	t_cube *cube;
@@ -86,6 +210,7 @@ t_cube *init_cube(char *file)
 		return (NULL);
 	cube->mlx = mlx_init();
 	cube->map = fill_map(file);
+	cube->rff_map = fill_rff_map(cube->map);
 	cube->win = mlx_new_window(cube->mlx, 1024, 480, "Cub3D");
 
 	return(cube);
@@ -125,13 +250,14 @@ int	close_cube(t_cube *cube)
 	return (0);
 }
 
-// Desenhar as linhas de "visao" do player
-// x e y sao a posicao atual do player
+// Funcao para transformar em radians para depois ser possivel obter os angulos para fazer o cone de visao
 double degrees_to_radians(double degrees)
 {
 	return (degrees * (PI / 180.00));
 }
 
+// Desenhar as linhas de "visao" do player
+// x e y sao a posicao atual do player
 //Dar fix ao drawing das linhas, matematica nao esta mathing
 void draw_line(t_cube *cube, int x, int y, int end_x, int end_y)
 {
@@ -172,8 +298,8 @@ void draw_lines(t_cube *cube, int x, int y)
 	int end_y;
 	
 	i = 0;
-	n_lines = 50;
-	line_lenght = 50;
+	n_lines = 500;
+	line_lenght = 100;
 	while(i <= n_lines)
 	{
 		angle = i - n_lines / 2;
@@ -208,26 +334,6 @@ void put_square(t_cube *cube, int x, int y, int color)
 	draw_lines(cube, n_lines, (y + n_rows) / 2);
 }
 
-void print_map(t_cube *cube)
-{
-	int i;
-	int j;
-	
-	i = 0;
-	while(cube->map[i])
-	{
-		j = 0;
-		printf("Linha %d: ", i);
-		while(cube->map[i][j])
-		{
-			printf("%c", cube->map[i][j]);
-			j++;
-		}
-		printf("\n");
-		i++;
-	}
-}
-
 int key_press(int keycode, t_cube *cube)
 {
 	if(keycode == ESC)
@@ -243,7 +349,8 @@ int main(int ac, char **av)
 	
 	cube = init_cube(av[1]);
 	
-	print_map(cube);
+	//print_map(cube->map);
+	printf("Saida do print_map\n");
 	put_square(cube, 50, 50, 0x00FF0000);
 	mlx_hook(cube->win, 17, 0, close_cube, cube);
 	mlx_key_hook(cube->win, key_press, cube);
