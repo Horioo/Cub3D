@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/11/07 11:47:08 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/11/08 11:21:55 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@
 # include "../gnl/get_next_line.h"
 # include "../minilibx-linux/mlx.h"
 
+# define ESC 65307
+# define LEFT 97
+# define UP 119
+# define RIGHT 100
+# define DOWN 115
 
 
 typedef struct s_cube

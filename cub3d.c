@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:13:39 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/11/07 13:04:17 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/11/08 11:32:49 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void	check_errors(int ac, char **av)
 		print_error("Error\nError on Opening file\n");
 }
 
-int	close_game(t_cube *cube)
+int	close_cube(t_cube *cube)
 {
 	(void)cube;
 	//errormsg(cube, "Bye Bye >:)", 0);
@@ -176,7 +176,7 @@ void draw_lines(t_cube *cube, int x, int y)
 	line_lenght = 50;
 	while(i <= n_lines)
 	{
-		angle = i;
+		angle = i - n_lines / 2;
 		radians = degrees_to_radians(angle);
 		end_x = x + (int)(line_lenght * cos(radians));
 		end_y = y + (int)(line_lenght * sin(radians));
@@ -192,7 +192,7 @@ void put_square(t_cube *cube, int x, int y, int color)
 	int n_pixels;
 
 	n_lines = x;
-	n_pixels = 100;
+	n_pixels = 50;
 	while(n_lines <= x + n_pixels)
 	{
 		n_rows = y;
@@ -204,10 +204,38 @@ void put_square(t_cube *cube, int x, int y, int color)
 		n_lines++;
 	}
 	printf("x = %d\ny = %d\n", n_lines, n_rows - ((n_pixels + x) / 2));
-	draw_lines(cube, n_lines, n_rows);
+	//Fazer com que enquanto ele nao bata numa parede "1" faca linhas, fazer de pouco a pouco
+	draw_lines(cube, n_lines, (y + n_rows) / 2);
 }
 
+void print_map(t_cube *cube)
+{
+	int i;
+	int j;
+	
+	i = 0;
+	while(cube->map[i])
+	{
+		j = 0;
+		printf("Linha %d: ", i);
+		while(cube->map[i][j])
+		{
+			printf("%c", cube->map[i][j]);
+			j++;
+		}
+		printf("\n");
+		i++;
+	}
+}
 
+int key_press(int keycode, t_cube *cube)
+{
+	if(keycode == ESC)
+		close_cube(cube);
+	if (keycode != DOWN && keycode != UP && keycode != LEFT && keycode != RIGHT)
+		return (1);
+	return (0);
+}
 int main(int ac, char **av)
 {
 	t_cube *cube;
@@ -215,8 +243,10 @@ int main(int ac, char **av)
 	
 	cube = init_cube(av[1]);
 	
+	print_map(cube);
 	put_square(cube, 50, 50, 0x00FF0000);
-	mlx_hook(cube->win, 17, 0, close_game, cube);
+	mlx_hook(cube->win, 17, 0, close_cube, cube);
+	mlx_key_hook(cube->win, key_press, cube);
 	mlx_loop(cube->mlx);
 
 }
