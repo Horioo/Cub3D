@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:13:39 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/11/12 12:52:32 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/11/19 12:58:05 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,6 +201,84 @@ char **fill_rff_map(char **map)
 	return (rff_map);
 }
 
+char **get_textures(char *file)
+{
+	char *row;
+	char **textures;
+	int fd;
+	int text_counter;
+
+	text_counter = 0;
+	textures = malloc((sizeof(char *) * 4) + 1);
+	row = get_next_line(-1);
+	fd = open(file, O_RDONLY);
+	row = get_next_line(fd);
+	while(row && text_counter < 4)
+	{
+		if(strncmp(row,"NO", 2) == 0)
+			textures[N] = strdup(row + 3);
+		else if(strncmp(row,"EA", 2) == 0)
+			textures[E] = strdup(row + 3);
+		else if(strncmp(row,"SO", 2) == 0)
+			textures[S] = strdup(row + 3);
+		else if(strncmp(row,"WE", 2) == 0)
+			textures[W] = strdup(row + 3);
+		text_counter++;
+		free(row);
+		row = get_next_line(fd);
+	}
+	return (textures);
+}
+/* Fazer com que ele leia as linhas do F e C e obter o valor para dentro da struct t_color
+char *get_rgb(char *line)
+{
+	int i;
+	char *color;
+	int color_counter;
+	
+	color = malloc(strlen(line) + 1);
+	i = 0;
+	color_counter = 0;
+	while(line && line[i])
+	{
+		if(line[i] == ',' || line[i] == '\0')
+			break;
+		else
+		{
+			color[color_counter] = line[i];
+			color_counter++;
+		}
+		i++;
+	}
+	return (color);
+}
+
+t_color *get_color(char *file, char type)
+{
+	char *row;
+	t_color *color;
+	int fd;
+	int color_counter;
+
+	color = malloc(sizeof(t_color));
+	color_counter = 0;
+	row = get_next_line(-1);
+	fd = open(file, O_RDONLY);
+	row = get_next_line(fd);
+	while(row && color_counter < 2)
+	{
+		
+		if(strncmp(row, type, 1) == 0)
+		{
+			color.red = atoi(get_rgb(row + 2));
+			color.green = atoi(get_rgb(row + 7));
+			color.blue = atoi(get_rgb(row + 2));
+		}
+	}
+	
+}
+*/
+
 t_cube *init_cube(char *file)
 {
 	t_cube *cube;
@@ -208,11 +286,13 @@ t_cube *init_cube(char *file)
 	cube = malloc(sizeof(t_cube));
 	if(!cube)
 		return (NULL);
+	cube->textures = get_textures(file);
+	//cube->f_color = get_color(file, 'F');
+	//cube->c_color = get_color(file, 'C');
 	cube->mlx = mlx_init();
 	cube->map = fill_map(file);
 	cube->rff_map = fill_rff_map(cube->map);
 	cube->win = mlx_new_window(cube->mlx, 1024, 480, "Cub3D");
-
 	return(cube);
 }
 
@@ -298,7 +378,7 @@ void draw_lines(t_cube *cube, int x, int y)
 	int end_y;
 	
 	i = 0;
-	n_lines = 500;
+	n_lines = 50;
 	line_lenght = 100;
 	while(i <= n_lines)
 	{
