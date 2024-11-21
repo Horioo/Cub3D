@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:13:39 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/11/19 12:58:05 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/11/21 13:31:15 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,55 +229,48 @@ char **get_textures(char *file)
 	}
 	return (textures);
 }
-/* Fazer com que ele leia as linhas do F e C e obter o valor para dentro da struct t_color
-char *get_rgb(char *line)
+
+//Fazer com que ele leia as linhas do F e C e obter o valor para dentro da struct t_color
+//Fazer o split da virgula!!!!! Joao e um Deus do codigo, fuck minishell
+//Claramente nao esta a funcionar :D
+void get_rgb(char *line, t_color *s_color)
 {
 	int i;
 	char *color;
 	int color_counter;
+	int s_it;
 	
 	color = malloc(strlen(line) + 1);
-	i = 0;
-	color_counter = 0;
-	while(line && line[i])
-	{
-		if(line[i] == ',' || line[i] == '\0')
-			break;
-		else
-		{
-			color[color_counter] = line[i];
-			color_counter++;
-		}
-		i++;
-	}
-	return (color);
+	if(!color)
+		return (NULL);
+	split(line, ',');
+	s_color->red = atoi(split[0]);
+	s_color->green = atoi(split[1]);
+	s_color->blue = atoi(split[2]);
 }
 
-t_color *get_color(char *file, char type)
+t_color *get_color(char *file, char *type)
 {
 	char *row;
 	t_color *color;
 	int fd;
-	int color_counter;
 
 	color = malloc(sizeof(t_color));
-	color_counter = 0;
-	row = get_next_line(-1);
+	if(!color)
+		return (NULL);
 	fd = open(file, O_RDONLY);
 	row = get_next_line(fd);
-	while(row && color_counter < 2)
+	while(row)
 	{
-		
 		if(strncmp(row, type, 1) == 0)
-		{
-			color.red = atoi(get_rgb(row + 2));
-			color.green = atoi(get_rgb(row + 7));
-			color.blue = atoi(get_rgb(row + 2));
-		}
+			get_rgb(row + 2, color);
+		free(row);
+		row = get_next_line(fd);
 	}
-	
+	free(row);
+	return (color);
 }
-*/
+
 
 t_cube *init_cube(char *file)
 {
@@ -287,8 +280,10 @@ t_cube *init_cube(char *file)
 	if(!cube)
 		return (NULL);
 	cube->textures = get_textures(file);
-	//cube->f_color = get_color(file, 'F');
-	//cube->c_color = get_color(file, 'C');
+	cube->f_color = get_color(file, "F");
+	printf("Floor Colors\nRed: %d Green: %d Blue: %d\n", cube->f_color->red, cube->f_color->green, cube->f_color->blue);
+	cube->c_color = get_color(file, "C");
+	printf("Ceiling Colors\nRed: %d Green: %d Blue: %d\n", cube->c_color->red, cube->c_color->green, cube->c_color->blue);
 	cube->mlx = mlx_init();
 	cube->map = fill_map(file);
 	cube->rff_map = fill_rff_map(cube->map);

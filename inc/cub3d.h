@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/11/12 11:27:47 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/11/19 12:56:58 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,11 @@
 # define UP 119
 # define RIGHT 100
 # define DOWN 115
+// For Textures Array
+# define N 0
+# define E 1
+# define S 2
+# define W 3
 
 
 /*
@@ -42,6 +47,13 @@
 	E depois fazer o reverse_flood_fill(ideia do joao) de forma a que ele va de fora para dentro e se conseguir entrar entao da erro
 */
 
+typedef struct s_color
+{
+	int red;
+	int green;
+	int blue;
+}				t_color;
+
 typedef struct s_cube
 {
 	void			*mlx;
@@ -49,20 +61,17 @@ typedef struct s_cube
 
 	char			**map;
 	char			**rff_map;
+	char			**textures;
 	
 	int				map_width;
 	int				map_height;
 	
 	// O valor vai ser nesta estrutura - 255,255,255
-	char 			*f_color; // Floor Color
-	char			*c_color; // Ceiling Color
-	
-	// Podemos colocar estas texturas num array de chars ou de voids, vai depender no futuro, e fazer com que e.g - [0] = NO; [1] = SO, etc...
-	char			*NO_text; // North Texture
-	char			*SO_text; // South Texture
-	char			*WE_text; // West Texture
-	char			*EA_text; // East Texture
+	t_color			*f_color; // Floor Color
+	t_color			*c_color; // Ceiling Color
 	
 }			t_cube;
+
+
 
 #endif
