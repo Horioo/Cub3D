@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 15:07:22 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/02/19 16:48:37 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/11/26 12:20:53 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int	ft_atoi(const char *s)
 
 	neg = 1;
 	ret = 0;
+	if(!s)
+		return (666);
 	while (ft_isspace(*s))
 		s++;
 	if (*s == '-' || *s == '+')

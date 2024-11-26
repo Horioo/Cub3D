@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/11/19 12:56:58 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/11/26 12:40:11 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_color
 	int red;
 	int green;
 	int blue;
+	int	hex_color; //Color in Hexadecimal
 }				t_color;
 
 typedef struct s_cube

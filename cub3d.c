@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:13:39 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/11/21 13:31:15 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/11/26 13:15:26 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ char **fill_rff_map(char **map)
 		i++;
 	}
 	rff_map[i] = alloc_line(NULL, big_line);
-	print_map(rff_map);
+	//print_map(rff_map);
 	return (rff_map);
 }
 
@@ -230,23 +230,66 @@ char **get_textures(char *file)
 	return (textures);
 }
 
+static int		conv_ex(int nb)
+{
+	if (nb >= 10)
+		return (nb - 10 + 'a');
+	else
+		return (nb + '0');
+}
+
+char	*itoa_base(int value, int base)
+{
+	int					i;
+	char				*str;
+	int				tmp;
+	
+	i = 0;
+	tmp = value;
+	while (tmp >= base)
+	{
+		tmp = tmp / base;
+		i++;
+	}	
+	if (!(str = (char *)malloc(sizeof(char) * (i + 1))))
+		return (NULL);
+	str[i + 1] = '\0';
+	while (i >= 0)
+	{
+		tmp = value % base;
+		str[i] = conv_ex(tmp);
+		value /= base;
+		i--;
+	}
+	return (str);
+}
+
+int	get_hex_color(int r, int g, int b)
+{
+	return (r << 16 | g << 8 | b);
+}
+
+
 //Fazer com que ele leia as linhas do F e C e obter o valor para dentro da struct t_color
 //Fazer o split da virgula!!!!! Joao e um Deus do codigo, fuck minishell
-//Claramente nao esta a funcionar :D
+//Mudei o atoi do libft para dar return a 666 quando a string enviada e nula
 void get_rgb(char *line, t_color *s_color)
 {
-	int i;
-	char *color;
-	int color_counter;
-	int s_it;
+	char **color;
 	
-	color = malloc(strlen(line) + 1);
+	color = ft_split(line, ',');
 	if(!color)
-		return (NULL);
-	split(line, ',');
-	s_color->red = atoi(split[0]);
-	s_color->green = atoi(split[1]);
-	s_color->blue = atoi(split[2]);
+		return ;
+	s_color->red = ft_atoi(color[0]);
+	s_color->green = ft_atoi(color[1]);
+	s_color->blue = ft_atoi(color[2]);
+	if(s_color->red > 255 || s_color->green > 255 || s_color->blue > 255)
+	{
+		//print_error("Some color didnt get a value\n");
+		printf("Some color didnt get a correct value\n");
+		exit(1);
+	}
+	s_color->hex_color = get_hex_color(s_color->red,s_color->green, s_color->blue);
 }
 
 t_color *get_color(char *file, char *type)
@@ -259,6 +302,7 @@ t_color *get_color(char *file, char *type)
 	if(!color)
 		return (NULL);
 	fd = open(file, O_RDONLY);
+	row = get_next_line(-1);
 	row = get_next_line(fd);
 	while(row)
 	{
@@ -281,13 +325,15 @@ t_cube *init_cube(char *file)
 		return (NULL);
 	cube->textures = get_textures(file);
 	cube->f_color = get_color(file, "F");
+	cube->map_height = 1400;
+	cube->map_width = 2800;
 	printf("Floor Colors\nRed: %d Green: %d Blue: %d\n", cube->f_color->red, cube->f_color->green, cube->f_color->blue);
 	cube->c_color = get_color(file, "C");
 	printf("Ceiling Colors\nRed: %d Green: %d Blue: %d\n", cube->c_color->red, cube->c_color->green, cube->c_color->blue);
 	cube->mlx = mlx_init();
 	cube->map = fill_map(file);
 	cube->rff_map = fill_rff_map(cube->map);
-	cube->win = mlx_new_window(cube->mlx, 1024, 480, "Cub3D");
+	cube->win = mlx_new_window(cube->mlx, cube->map_width, cube->map_height, "Cub3D");
 	return(cube);
 }
 
@@ -333,7 +379,6 @@ double degrees_to_radians(double degrees)
 
 // Desenhar as linhas de "visao" do player
 // x e y sao a posicao atual do player
-//Dar fix ao drawing das linhas, matematica nao esta mathing
 void draw_line(t_cube *cube, int x, int y, int end_x, int end_y)
 {
 	int dist_x;
@@ -355,13 +400,13 @@ void draw_line(t_cube *cube, int x, int y, int end_x, int end_y)
 	new_y = y;
 	while(i <= steps)
 	{
-		mlx_pixel_put(cube->mlx, cube->win, (int)new_x, (int)new_y, 0x00FFFF00);
+		mlx_pixel_put(cube->mlx, cube->win, (int)new_x, (int)new_y, cube->f_color->hex_color);
 		new_x += x_increm;
 		new_y += y_increm;
 		i++;
 	}
 }
-
+//Funcao vai ter de ser refeita provavelmente, ela esta a fazer os raios mas esta com valores postos a mao
 void draw_lines(t_cube *cube, int x, int y)
 {
 	int i;
@@ -374,19 +419,19 @@ void draw_lines(t_cube *cube, int x, int y)
 	
 	i = 0;
 	n_lines = 50;
-	line_lenght = 100;
+	line_lenght = cube->map_height;
 	while(i <= n_lines)
 	{
-		angle = i - n_lines / 2;
+		angle = i - n_lines * 2 - 15;
 		radians = degrees_to_radians(angle);
 		end_x = x + (int)(line_lenght * cos(radians));
 		end_y = y + (int)(line_lenght * sin(radians));
-		draw_line(cube, x, y, end_x, end_y);
+		draw_line(cube, x-25, y, end_x-25, end_y);
 		i++;
 	}
 }
 
-void put_square(t_cube *cube, int x, int y, int color)
+void put_square(t_cube *cube, int x, int y)
 {
 	int n_lines;
 	int n_rows;
@@ -399,14 +444,15 @@ void put_square(t_cube *cube, int x, int y, int color)
 		n_rows = y;
 		while(n_rows <= y + n_pixels)
 		{
-			mlx_pixel_put(cube->mlx, cube->win,n_lines, n_rows, color);
+			
+			mlx_pixel_put(cube->mlx, cube->win,n_lines, n_rows, cube->c_color->hex_color);
 			n_rows++;
 		}
 		n_lines++;
 	}
 	printf("x = %d\ny = %d\n", n_lines, n_rows - ((n_pixels + x) / 2));
 	//Fazer com que enquanto ele nao bata numa parede "1" faca linhas, fazer de pouco a pouco
-	draw_lines(cube, n_lines, (y + n_rows) / 2);
+	draw_lines(cube, n_lines, y);
 }
 
 int key_press(int keycode, t_cube *cube)
@@ -425,10 +471,8 @@ int main(int ac, char **av)
 	cube = init_cube(av[1]);
 	
 	//print_map(cube->map);
-	printf("Saida do print_map\n");
-	put_square(cube, 50, 50, 0x00FF0000);
+	put_square(cube, 1400, cube->map_height-50);
 	mlx_hook(cube->win, 17, 0, close_cube, cube);
 	mlx_key_hook(cube->win, key_press, cube);
 	mlx_loop(cube->mlx);
-
 }
