@@ -10,7 +10,15 @@ MLX_FLAGS = minilibx-linux/libmlx.a -lXext -lX11 -lm
 GNL_FILES = gnl/get_next_line.c gnl/get_next_line_utils.c
 RM = rm -f
 
-FILES = cub3d.c $(GNL_FILES)
+FILES = src/cub3d.c \
+		src/color.c \
+		src/draw.c \
+		src/keys.c \
+		src/map_utils.c \
+		src/map.c \
+		src/textures.c \
+		src/utils.c \
+		$(GNL_FILES)
 
 
 SRCS = $(FILES)

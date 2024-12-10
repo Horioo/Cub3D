@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/11/26 12:40:11 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/12/10 12:31:36 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@
 # define E 1
 # define S 2
 # define W 3
+//Screen Settings
+# define map_W 1980
+# define map_H 1024
 
 
 /*
@@ -63,9 +66,9 @@ typedef struct s_cube
 	char			**map;
 	char			**rff_map;
 	char			**textures;
-	
-	int				map_width;
-	int				map_height;
+
+	int				player_x;
+	int				player_y;
 	
 	// O valor vai ser nesta estrutura - 255,255,255
 	t_color			*f_color; // Floor Color
@@ -74,5 +77,39 @@ typedef struct s_cube
 }			t_cube;
 
 
+//Color
+t_color *get_color(char *file, char *type);
+void get_rgb(char *line, t_color *s_color);
+
+//Draw
+void draw_lines(t_cube *cube, int x, int y);
+void put_square(t_cube *cube, int x, int y);
+
+//Keys
+int key_press(int keycode, t_cube *cube);
+
+//Map Utils
+int search_for_big_line(char **map);
+int check_map_coluns(char **map);
+void print_map(char **map);
+void	map_check(t_cube *cube, int x, int y);
+void	get_player_position(t_cube *cube);
+
+//Map
+char **fill_rff_map(char **map);
+char *alloc_line(char *line, int big_line);
+char **alloc_map(int colums, int line_lenght);
+char	**fill_map(char *file);
+int	colum_maps(char *file);
+
+//Textures
+char **get_textures(char *file);
+
+//Utils
+int	close_cube(t_cube *cube);
+void	check_errors(int ac, char **av);
+void	print_error(char *str);
+int	checkcub(char *file);
+int	ft_strcmp(char *s1, char *s2);
 
 #endif
