@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 11:07:24 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/12/10 11:09:50 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/12/12 12:55:16 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,10 +129,11 @@ char **fill_rff_map(char **map)
 		if(i == 0)
 			rff_map[i] = alloc_line(NULL, big_line);
 		else
-			rff_map[i] = alloc_line(map[i], big_line);
+			rff_map[i] = alloc_line(map[i - 1], big_line);
 		i++;
 	}
-	rff_map[i] = alloc_line(NULL, big_line);
+	rff_map[i] = alloc_line(map[i - 1], big_line);
+	rff_map[i + 1] = alloc_line(NULL, big_line);
 	//print_map(rff_map);
 	return (rff_map);
 }

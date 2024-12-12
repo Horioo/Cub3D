@@ -6,17 +6,11 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 11:12:59 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/12/10 11:33:38 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/12/12 12:22:05 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
-
-// Funcao para transformar em radians para depois ser possivel obter os angulos para fazer o cone de visao
-double degrees_to_radians(double degrees)
-{
-	return (degrees * (PI / 180.00));
-}
 
 // Desenhar as linhas de "visao" do player
 // x e y sao a posicao atual do player
@@ -41,7 +35,7 @@ void draw_line(t_cube *cube, int x, int y, int end_x, int end_y)
 	new_y = y;
 	while(i <= steps)
 	{
-		mlx_pixel_put(cube->mlx, cube->win, (int)new_x, (int)new_y, cube->f_color->hex_color);
+		mlx_pixel_put(cube->mlx, cube->win, (int)new_x, (int)new_y, 0xFFFFFFFF);
 		new_x += x_increm;
 		new_y += y_increm;
 		i++;
@@ -86,11 +80,41 @@ void put_square(t_cube *cube, int x, int y)
 		while(n_rows <= y + n_pixels)
 		{
 			
-			mlx_pixel_put(cube->mlx, cube->win,n_lines, n_rows, cube->c_color->hex_color);
+			mlx_pixel_put(cube->mlx, cube->win,n_lines, n_rows, 0x00000000);
 			n_rows++;
 		}
 		n_lines++;
 	}
 	//Fazer com que enquanto ele nao bata numa parede "1" faca linhas, fazer de pouco a pouco
 	draw_lines(cube, n_lines, y);
+}
+
+void draw_floor(t_cube *cube)
+{
+	int i;
+	int j;
+	
+	i = 0;
+	while(i < map_W)
+	{
+		j = map_H / 2 - 1;
+		while(++j < map_H)
+			mlx_pixel_put(cube->mlx, cube->win, i, j, cube->f_color->hex_color);
+		i++;
+	}
+}
+
+void draw_ceiling(t_cube *cube)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while(i < map_W)
+	{
+		j = -1;
+		while(++j < map_H / 2)
+			mlx_pixel_put(cube->mlx, cube->win, i, j, cube->c_color->hex_color);
+		i++;
+	}
 }

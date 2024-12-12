@@ -13,11 +13,13 @@ RM = rm -f
 FILES = src/cub3d.c \
 		src/color.c \
 		src/draw.c \
+		src/draw_utils.c \
 		src/keys.c \
 		src/map_utils.c \
 		src/map.c \
 		src/textures.c \
 		src/utils.c \
+		src/rff.c \
 		$(GNL_FILES)
 
 

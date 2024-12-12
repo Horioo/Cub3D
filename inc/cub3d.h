@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/12/10 12:31:36 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2024/12/12 13:02:18 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@
 # define S 2
 # define W 3
 //Screen Settings
-# define map_W 1980
-# define map_H 1024
+# define map_W 600
+# define map_H 300
 
 
 /*
@@ -66,6 +66,8 @@ typedef struct s_cube
 	char			**map;
 	char			**rff_map;
 	char			**textures;
+	int				map_col;
+	int				map_line;
 
 	int				player_x;
 	int				player_y;
@@ -84,6 +86,11 @@ void get_rgb(char *line, t_color *s_color);
 //Draw
 void draw_lines(t_cube *cube, int x, int y);
 void put_square(t_cube *cube, int x, int y);
+void draw_floor(t_cube *cube);
+void draw_ceiling(t_cube *cube);
+
+//Draw Utils
+double degrees_to_radians(double degrees);
 
 //Keys
 int key_press(int keycode, t_cube *cube);
@@ -101,6 +108,9 @@ char *alloc_line(char *line, int big_line);
 char **alloc_map(int colums, int line_lenght);
 char	**fill_map(char *file);
 int	colum_maps(char *file);
+
+//RFF
+void rff_check(t_cube *cube, int x, int y);
 
 //Textures
 char **get_textures(char *file);
