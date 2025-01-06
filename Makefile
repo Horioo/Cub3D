@@ -20,6 +20,7 @@ FILES = src/cub3d.c \
 		src/textures.c \
 		src/utils.c \
 		src/rff.c \
+		src/DDA.c \
 		$(GNL_FILES)
 
 

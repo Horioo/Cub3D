@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/12/12 13:02:18 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/06 16:42:23 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 # define PI 3.14159265
 
 # include <stdio.h>
+# include <sys/wait.h>
 # include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
@@ -121,5 +122,8 @@ void	check_errors(int ac, char **av);
 void	print_error(char *str);
 int	checkcub(char *file);
 int	ft_strcmp(char *s1, char *s2);
+
+//DDA
+void DDA(t_cube *cube, int X0, int Y0, int X1, int Y1);
 
 #endif
