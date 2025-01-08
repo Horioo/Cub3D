@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 11:12:59 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/12/12 12:22:05 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/08 18:37:08 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void draw_lines(t_cube *cube, int x, int y)
 	
 	i = 0;
 	n_lines = 50;
-	line_lenght = map_H;
+	line_lenght = SCREEN_H;
 	while(i <= n_lines)
 	{
 		angle = i - n_lines * 2 - 15;
@@ -95,11 +95,11 @@ void draw_floor(t_cube *cube)
 	int j;
 	
 	i = 0;
-	while(i < map_W)
+	while(i < SCREEN_W)
 	{
-		j = map_H / 2 - 1;
-		while(++j < map_H)
-			mlx_pixel_put(cube->mlx, cube->win, i, j, cube->f_color->hex_color);
+		j = SCREEN_H / 2 - 1;
+		while(++j < SCREEN_H)
+			mlx_pixel_put(cube->mlx, cube->win, i, j, cube->data->f_color->hex_color);
 		i++;
 	}
 }
@@ -110,11 +110,11 @@ void draw_ceiling(t_cube *cube)
 	int j;
 
 	i = 0;
-	while(i < map_W)
+	while(i < SCREEN_W)
 	{
 		j = -1;
-		while(++j < map_H / 2)
-			mlx_pixel_put(cube->mlx, cube->win, i, j, cube->c_color->hex_color);
+		while(++j < SCREEN_H / 2)
+			mlx_pixel_put(cube->mlx, cube->win, i, j, cube->data->c_color->hex_color);
 		i++;
 	}
 }

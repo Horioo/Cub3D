@@ -6,25 +6,24 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:28:07 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/06 17:42:57 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/08 18:38:37 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
-//Verificar ChatGPT
-void rff_check(t_cube *cube, int x, int y)
+void rff_check(t_data *data, int x, int y)
 {
-	if(!cube->rff_map || x < 0 || y < 0 || x > cube->map_line + 1 || y > cube->map_col + 1)
+	if(!data->rff_map || x < 0 || y < 0 || x > data->map_W + 1 || y > data->map_H + 1)
 		return ;
-	if(cube->rff_map[y][x] == '5' || cube->rff_map[y][x] == '1')
+	if(data->rff_map[y][x] == '5' || data->rff_map[y][x] == '1')
 		return ;
-	if(cube->rff_map[y][x] == '0')
+	if(data->rff_map[y][x] == '0')
 		print_error("Invalid Map 404\n");
-	cube->rff_map[y][x] = '5';
-	rff_check(cube, x + 1, y);
-	rff_check(cube, x, y + 1);
-	rff_check(cube, x - 1, y);
-	rff_check(cube, x, y - 1);
+	data->rff_map[y][x] = '5';
+	rff_check(data, x + 1, y);
+	rff_check(data, x, y + 1);
+	rff_check(data, x - 1, y);
+	rff_check(data, x, y - 1);
 }
 

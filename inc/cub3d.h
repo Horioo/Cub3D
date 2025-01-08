@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/06 16:42:23 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/08 18:33:20 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,19 @@
 # define UP 119
 # define RIGHT 100
 # define DOWN 115
+# define TILE_SIZE 30
+# define FOV 66
+# define ROTATION_SPEED 0.045
+# define PLAYER_SPEED 4
+
 // For Textures Array
 # define N 0
 # define E 1
 # define S 2
 # define W 3
 //Screen Settings
-# define map_W 600
-# define map_H 300
+# define SCREEN_W 600
+# define SCREEN_H 300
 
 
 /*
@@ -59,71 +64,91 @@ typedef struct s_color
 	int	hex_color; //Color in Hexadecimal
 }				t_color;
 
+typedef struct s_player
+{
+	int	p_x; //Posicao Jogador X em Pixeis
+	int p_y; //Posicao Jogador Y em Pixeis
+	double angle; //Angulo do Player
+	float fov_rd; //Field of View do Player em Radianos
+	
+} t_player;
+
+typedef struct s_ray
+{
+	double ray_ang; //Angulo do raio
+	double dist; //Distancia ate a parede
+	int hit; //Flag se deu hit na parede
+	
+} t_ray;
+
+typedef struct s_data
+{
+	char			**map;
+	char			**rff_map;
+	int				player_x; // Posicao X do jogador no mapa
+	int				player_y; // Posicao Y do jogador no mapa
+	int				map_W; // Largura do Mapa
+	int				map_H; // Altura do Mapa
+	t_color			*f_color;
+	t_color			*c_color;
+	char			**textures;
+	
+} t_data;
+
 typedef struct s_cube
 {
 	void			*mlx;
 	void			*win;
-
-	char			**map;
-	char			**rff_map;
-	char			**textures;
-	int				map_col;
-	int				map_line;
-
-	int				player_x;
-	int				player_y;
+	t_ray			*ray;
+	t_data			*data;
+	t_player		*player;
 	
-	// O valor vai ser nesta estrutura - 255,255,255
-	t_color			*f_color; // Floor Color
-	t_color			*c_color; // Ceiling Color
-	
-}			t_cube;
-
+}t_cube;
 
 //Color
 t_color *get_color(char *file, char *type);
-void get_rgb(char *line, t_color *s_color);
+void 	get_rgb(char *line, t_color *s_color);
 
 //Draw
-void draw_lines(t_cube *cube, int x, int y);
-void put_square(t_cube *cube, int x, int y);
-void draw_floor(t_cube *cube);
-void draw_ceiling(t_cube *cube);
+void 	draw_lines(t_cube *cube, int x, int y);
+void 	put_square(t_cube *cube, int x, int y);
+void 	draw_floor(t_cube *cube);
+void 	draw_ceiling(t_cube *cube);
 
 //Draw Utils
-double degrees_to_radians(double degrees);
+double 	degrees_to_radians(double degrees);
 
 //Keys
-int key_press(int keycode, t_cube *cube);
+int 	key_press(int keycode, t_cube *cube);
 
 //Map Utils
-int search_for_big_line(char **map);
-int check_map_coluns(char **map);
-void print_map(char **map);
+int 	search_for_big_line(char **map);
+int 	check_map_coluns(char **map);
+void 	print_map(char **map);
 void	map_check(t_cube *cube, int x, int y);
-void	get_player_position(t_cube *cube);
+void	get_player_position(t_data *data);
 
 //Map
-char **fill_rff_map(char **map);
-char *alloc_line(char *line, int big_line);
-char **alloc_map(int colums, int line_lenght);
+char 	**fill_rff_map(char **map);
+char 	*alloc_line(char *line, int big_line);
+char 	**alloc_map(int colums, int line_lenght);
 char	**fill_map(char *file);
-int	colum_maps(char *file);
+int		colum_maps(char *file);
 
 //RFF
-void rff_check(t_cube *cube, int x, int y);
+void 	rff_check(t_data *data, int x, int y);
 
 //Textures
-char **get_textures(char *file);
+char 	**get_textures(char *file);
 
 //Utils
-int	close_cube(t_cube *cube);
+int		close_cube(t_cube *cube);
 void	check_errors(int ac, char **av);
 void	print_error(char *str);
-int	checkcub(char *file);
-int	ft_strcmp(char *s1, char *s2);
+int		checkcub(char *file);
+int		ft_strcmp(char *s1, char *s2);
 
 //DDA
-void DDA(t_cube *cube, int X0, int Y0, int X1, int Y1);
+void 	DDA(t_cube *cube, int X0, int Y0, int X1, int Y1);
 
 #endif

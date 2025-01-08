@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 11:09:13 by ajorge-p          #+#    #+#             */
-/*   Updated: 2024/12/10 12:31:25 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/08 18:12:41 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,26 +66,26 @@ int search_for_big_line(char **map)
 	return (line_lenght);
 }
 
-void	get_player_position(t_cube *cube)
+void	get_player_position(t_data *data)
 {
 	int x;
 	int y;
 
 	y = 0;
-	while(cube->map[y])
+	while(data->map[y])
 	{
 		x = 0;
-		while(cube->map[y][x])
+		while(data->map[y][x])
 		{
-			if(cube->map[y][x] == 'N' || cube->map[y][x] == 'E' || cube->map[y][x] == 'S' || cube->map[y][x] == 'W')
+			if(data->map[y][x] == 'N' || data->map[y][x] == 'E' || data->map[y][x] == 'S' || data->map[y][x] == 'W')
 			{
-				cube->player_x = x;
-				cube->player_y = y;
+				data->player_x = x;
+				data->player_y = y;
 			}
 			x++;
 		}
 		y++;
 	}
-	if(cube->player_x == 0 && cube->player_y == 0)
+	if(data->player_x == 0 && data->player_y == 0)
 		print_error("Error!!\nNo Player Detected\n");
 }
