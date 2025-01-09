@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:13:39 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/08 18:35:45 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/09 12:43:25 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void game_start(t_data *data)
 
 	cube = safe_malloc(sizeof(t_cube));
 	cube->data = data;
-	//cube->ray = init_ray();
+	cube->ray = safe_malloc(sizeof(t_ray));
 	cube->player = init_player(cube);
 	cube->mlx = mlx_init();
 	cube->win = mlx_new_window(cube->mlx, SCREEN_W, SCREEN_H, "Cub3D");

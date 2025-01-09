@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/08 18:33:20 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/09 12:44:34 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,14 +70,51 @@ typedef struct s_player
 	int p_y; //Posicao Jogador Y em Pixeis
 	double angle; //Angulo do Player
 	float fov_rd; //Field of View do Player em Radianos
+	double dir_x; //Direcao do jogador no eixo do x
+	double dir_y; //Direcao do jogador no eixo do y
+	double plane_x; //No Clue
+	double plane_y; //No Clue
 	
 } t_player;
 
 typedef struct s_ray
 {
-	double ray_ang; //Angulo do raio
-	double dist; //Distancia ate a parede
-	int hit; //Flag se deu hit na parede
+	//Representa a posicao do raio no eixo do x da camera
+	double 	camera_x; 
+	
+	//Representa a direcao do raio no eixo x
+	double 	ray_dir_x; 
+	double 	ray_dir_y; 
+	
+	//Usado para calculos no DDA
+	int		map_x; 
+	int		map_y; 
+
+	// Distancia que o raio tem de percorrer ate encontrar a proxima linha da grid
+	double 	delta_dist_x; 
+	double 	delta_dist_y; 
+	
+	//Determina em que direcao vai andar o Raio
+	int 	step_x; 
+	int		step_y;
+	
+	//Valor inicial que o raio tem de percorrer ate encontrar a proxima linha, vai ser depois atualizado com o delta_dist ao decorrer do codigo
+	double	side_dist_x; 
+	double	side_dist_y; 
+	
+	//Flag para saber se acertou na parede (0 se acertou no eixo do X & 1 se acertou no eixo do Y)
+	int		side;
+
+	// Calculos para a altura da Parede
+	double	wall_dist;
+	int		wall_height;
+	
+	//Posicao no eixo do X da parede
+	double	wall_x;
+
+	// Posicoes de inicio e fim para comecar a desenhar
+	int		start_pos_draw;
+	int		end_pos_draw;
 	
 } t_ray;
 
@@ -149,6 +186,7 @@ int		checkcub(char *file);
 int		ft_strcmp(char *s1, char *s2);
 
 //DDA
-void 	DDA(t_cube *cube, int X0, int Y0, int X1, int Y1);
+void Raycaster(t_cube *cube);
+
 
 #endif
