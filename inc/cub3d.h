@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/09 12:44:34 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/10 13:34:55 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <stdbool.h>
 # include <fcntl.h>
 # include <math.h>
 # include <GL/gl.h>
@@ -31,7 +32,7 @@
 # define UP 119
 # define RIGHT 100
 # define DOWN 115
-# define TILE_SIZE 30
+# define TILE_SIZE 64
 # define FOV 66
 # define ROTATION_SPEED 0.045
 # define PLAYER_SPEED 4
@@ -42,8 +43,8 @@
 # define S 2
 # define W 3
 //Screen Settings
-# define SCREEN_W 600
-# define SCREEN_H 300
+# define SCREEN_W 1920
+# define SCREEN_H 1080
 
 
 /*
@@ -53,7 +54,7 @@
 	Este gajo tem uma pagina fixe para ver https://hackmd.io/@nszl/H1LXByIE2
 
 	Fazer copia - +2 linhas (uma no inicio e outra no final), cada linha + 2 tamanho
-	E depois fazer o reverse_flood_fill(ideia do joao) de forma a que ele va de fora para dentro e se conseguir entrar entao da erro
+	E depois fazer o reverse_flood_fill de forma a que ele va de fora para dentro e se conseguir entrar entao da erro
 */
 
 typedef struct s_color
@@ -82,12 +83,12 @@ typedef struct s_ray
 	//Representa a posicao do raio no eixo do x da camera
 	double 	camera_x; 
 	
-	//Representa a direcao do raio no eixo x
+	//Representa a direcao do raio
 	double 	ray_dir_x; 
 	double 	ray_dir_y; 
 	
 	//Usado para calculos no DDA
-	int		map_x; 
+	int		map_x;
 	int		map_y; 
 
 	// Distancia que o raio tem de percorrer ate encontrar a proxima linha da grid
@@ -109,8 +110,11 @@ typedef struct s_ray
 	double	wall_dist;
 	int		wall_height;
 	
-	//Posicao no eixo do X da parede
+	//Posicao X onde o raio bate na parede
 	double	wall_x;
+	
+	//Coordenada X da textura que sera baseado no valor do wall_x
+	int		text_x;
 
 	// Posicoes de inicio e fim para comecar a desenhar
 	int		start_pos_draw;
@@ -129,6 +133,8 @@ typedef struct s_data
 	t_color			*f_color;
 	t_color			*c_color;
 	char			**textures;
+	int				**texture_buffer;
+	int				**pixel_map;
 	
 } t_data;
 
@@ -184,6 +190,9 @@ void	check_errors(int ac, char **av);
 void	print_error(char *str);
 int		checkcub(char *file);
 int		ft_strcmp(char *s1, char *s2);
+
+//More Utils
+void	*safe_calloc(size_t type, size_t bytes);
 
 //DDA
 void Raycaster(t_cube *cube);

@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 11:28:34 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/09 12:45:20 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/10 13:46:06 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,64 @@ void wall_calculations(t_ray *ray, t_player *player)
 	ray->wall_x -= floor(ray->wall_x);
 }
 
+bool create_pixel_map(t_data *data)
+{
+	int i;
+
+	data->pixel_map = safe_calloc(sizeof(int *), SCREEN_H + 1);
+	i = -1;
+	while(++i < SCREEN_H)
+	{
+		data->pixel_map[i] = ft_calloc(sizeof(int), SCREEN_W);
+		if(!data->pixel_map[i])
+			return(/*(Free pixel_map array),*/ false);
+	}
+	return (true);
+}
+
+int  get_cardinal_direction(t_ray *ray)
+{
+	if(ray->side == 0)
+	{
+		if(ray->ray_dir_x < 0)
+			return (W);
+		else
+			return (E);
+	}	
+	else
+	{
+		if(ray->ray_dir_y > 0)
+			return (S);
+		else 
+			return (N);
+	}
+}
+
+void update_pixel_map(t_data *data, t_ray *ray, int x)
+{
+	int	dir;
+	double step;
+	double pos;
+	int color;
+	
+	dir = get_cardinal_direction(ray);
+	ray->text_x = (int)(ray->wall_x * TILE_SIZE);
+	if(dir == W || dir == S)
+		ray->text_x = TILE_SIZE - ray->text_x - 1;
+	step = TILE_SIZE / ray->wall_height;
+	pos = (ray->start_pos_draw - SCREEN_H / 2 + ray->wall_height / 2) * step;
+	while(ray->start_pos_draw < ray->end_pos_draw)
+	{
+		pos += step;
+		color = (data->texture_buffer[dir][TILE_SIZE * ((int)pos & (TILE_SIZE - 1)) + ray->text_x]);
+		if(dir == N || dir == S)
+			color = (color >> 1) & 0x7F7F7F;
+		if(color > 0)
+			data->pixel_map[ray->start_pos_draw][x] = color;
+		ray->start_pos_draw++;
+	}
+}
+
 void Raycaster(t_cube *cube)
 { 
 	int x;
@@ -100,7 +158,7 @@ void Raycaster(t_cube *cube)
 		calculate_dist(cube->ray, cube->player);
 		DDA(cube->ray, cube->data);
 		wall_calculations(cube->ray, cube->player);
-		//Todo Textures e Pixel Map
+		update_pixel_map(cube->data, cube->ray, x);
 		x++;
 	}	
 } 

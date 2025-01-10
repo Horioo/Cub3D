@@ -6,19 +6,19 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:13:39 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/09 12:43:25 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/10 13:07:58 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
-void	*safe_malloc(size_t bytes)
+void	*safe_calloc(size_t type, size_t bytes)
 {
 	void	*ret;
 
-	ret = malloc(bytes);
+	ret = ft_calloc(type, bytes);
 	if (!ret)
-		print_error("Error on Malloc\n");
+		print_error("Error on Calloc\n");
 	return (ret);
 }
 
@@ -58,9 +58,9 @@ void game_start(t_data *data)
 {
 	t_cube *cube;
 
-	cube = safe_malloc(sizeof(t_cube));
+	cube = safe_calloc(sizeof(t_cube), 1);
 	cube->data = data;
-	cube->ray = safe_malloc(sizeof(t_ray));
+	cube->ray = safe_calloc(sizeof(t_ray), 1);
 	cube->player = init_player(cube);
 	cube->mlx = mlx_init();
 	cube->win = mlx_new_window(cube->mlx, SCREEN_W, SCREEN_H, "Cub3D");
