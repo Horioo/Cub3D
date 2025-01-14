@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/10 13:34:55 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:54:04 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,18 @@ typedef struct s_data
 	
 } t_data;
 
+typedef struct s_img
+{
+	char	*path;
+	void	*img;
+	int		*addr;
+	int		bytes_per_pixel;
+	int		line_len;
+	int		endian;
+	int		width;
+	int		height;
+} t_img;
+
 typedef struct s_cube
 {
 	void			*mlx;
@@ -183,6 +195,7 @@ void 	rff_check(t_data *data, int x, int y);
 
 //Textures
 char 	**get_textures(char *file);
+void	load_textures(t_cube *cube, t_data *data);
 
 //Utils
 int		close_cube(t_cube *cube);
@@ -194,8 +207,8 @@ int		ft_strcmp(char *s1, char *s2);
 //More Utils
 void	*safe_calloc(size_t type, size_t bytes);
 
-//DDA
+//Raycasting
 void Raycaster(t_cube *cube);
-
+void create_pixel_map(t_data *data);
 
 #endif

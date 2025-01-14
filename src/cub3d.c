@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:13:39 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/10 13:07:58 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:19:57 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,25 @@ void	*safe_calloc(size_t type, size_t bytes)
 	if (!ret)
 		print_error("Error on Calloc\n");
 	return (ret);
+}
+
+void	double_check_map(t_data *data)
+{
+	int i;
+	int	j;
+
+	i = 0;
+	while(i < check_map_coluns(data->rff_map))
+	{
+		j = 0;
+		while(j < ft_strlen(data->rff_map[i]))
+		{
+			if(data->rff_map[i][j + 1] && data->rff_map[i][j] == '0' && data->rff_map[i][j + 1] == ' ')
+				print_error("Invalid Map, Space Found after a Open Space\n");
+			j++;
+		}
+		i++;
+	}
 }
 
 t_data *init_data(char *file)
@@ -38,6 +57,8 @@ t_data *init_data(char *file)
 	get_player_position(data);
 	data->rff_map = fill_rff_map(data->map);
 	rff_check(data, 1, 1);
+	double_check_map(data);
+	create_pixel_map(data);
 	return (data);
 }
 
@@ -45,7 +66,7 @@ t_player *init_player(t_cube *cube)
 {
 	t_player *p;
 
-	p = safe_malloc(sizeof(t_player));
+	p = safe_calloc(sizeof(t_player), 1);
 	
 	p->p_x = cube->data->player_x + TILE_SIZE + TILE_SIZE / 2;
 	p->p_y = cube->data->player_y + TILE_SIZE + TILE_SIZE / 2;
@@ -66,11 +87,12 @@ void game_start(t_data *data)
 	cube->win = mlx_new_window(cube->mlx, SCREEN_W, SCREEN_H, "Cub3D");
 	mlx_hook(cube->win, 17, 0, close_cube, cube);
 	//print_map(cube->map);
-	draw_floor(cube);
-	draw_ceiling(cube);
-	put_square(cube, SCREEN_W/2, SCREEN_H-50);
-	print_map(data->rff_map);
-	//DDA(cube, map_W/2, map_H, map_H, 0);
+	//draw_floor(cube);
+	//draw_ceiling(cube);
+	//put_square(cube, SCREEN_W/2, SCREEN_H-50);
+	print_map(data->map);
+	Raycaster(cube);
+	load_textures(cube, cube->data);
 	mlx_key_hook(cube->win, key_press, cube);
 	mlx_loop(cube->mlx);
 }

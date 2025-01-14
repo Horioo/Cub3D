@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 12:28:07 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/08 18:38:37 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:10:02 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void rff_check(t_data *data, int x, int y)
 	if(data->rff_map[y][x] == '5' || data->rff_map[y][x] == '1')
 		return ;
 	if(data->rff_map[y][x] == '0')
-		print_error("Invalid Map 404\n");
+		print_error("Invalid Map, Map Open on the borders\n");
 	data->rff_map[y][x] = '5';
 	rff_check(data, x + 1, y);
 	rff_check(data, x, y + 1);

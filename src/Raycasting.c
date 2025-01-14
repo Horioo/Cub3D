@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 11:28:34 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/10 13:46:06 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/14 12:52:22 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ void calculate_dist(t_ray *ray, t_player *player)
 	}
 }
 
-void raycaster_var_init(t_ray *ray, t_player *player, int x)
+void raycaster_var_init(t_ray *ray, t_player *player,t_data *data, int x)
 {
 	ray->camera_x = 2 * x / (double)SCREEN_W - 1;
 	ray->ray_dir_x = player->dir_x + player->plane_x * ray->camera_x;
 	ray->ray_dir_y = player->dir_y + player->plane_y * ray->camera_x;
-	ray->map_x = player->p_x;
-	ray->map_y = player->p_x;
+	ray->map_x = data->player_x;
+	ray->map_y = data->player_y;
 	ray->delta_dist_x = fabs(1 / ray->ray_dir_x);
 	ray->delta_dist_y = fabs(1 / ray->ray_dir_y);	
 }
@@ -64,7 +64,7 @@ void DDA(t_ray *ray, t_data *data)
 			ray->map_y += ray->step_y;
 			ray->side = 1;
 		}
-		if(data->map[ray->map_x][ray->map_y] == '1')
+		if(data->map[ray->map_y][ray->map_x] == '1')
 			break;
 	}
 	if(ray->side == 0)
@@ -89,7 +89,7 @@ void wall_calculations(t_ray *ray, t_player *player)
 	ray->wall_x -= floor(ray->wall_x);
 }
 
-bool create_pixel_map(t_data *data)
+void create_pixel_map(t_data *data)
 {
 	int i;
 
@@ -99,9 +99,8 @@ bool create_pixel_map(t_data *data)
 	{
 		data->pixel_map[i] = ft_calloc(sizeof(int), SCREEN_W);
 		if(!data->pixel_map[i])
-			return(/*(Free pixel_map array),*/ false);
+			print_error("Error on Pixel Map\n");
 	}
-	return (true);
 }
 
 int  get_cardinal_direction(t_ray *ray)
@@ -147,6 +146,34 @@ void update_pixel_map(t_data *data, t_ray *ray, int x)
 	}
 }
 
+void	draw_pixel_map(t_cube *cube, t_data *data)
+{
+	t_img 	img;
+	int 	x;
+	int 	y;
+
+	img.img = mlx_new_image(cube->mlx,SCREEN_W, SCREEN_H);
+	if(!img.img)
+		return ;
+	img.addr = (int *)mlx_get_data_addr(img.img, &img.bytes_per_pixel, &img.line_len, &img.endian);
+	y = -1;
+	while(++y < SCREEN_H)
+	{
+		x = -1;
+		while(++x < SCREEN_W)
+		{
+			if(data->pixel_map[y][x] > 0)
+				img.addr[y * (img.line_len / 4) + x] = data->pixel_map[y][x];
+			if(y < SCREEN_H / 2)
+				img.addr[y * (img.line_len / 4) + x] = data->c_color->hex_color;
+			if(y < SCREEN_H - 1)
+				img.addr[y * (img.line_len / 4) + x] = data->f_color->hex_color;
+		}
+	}
+	mlx_put_image_to_window(cube->mlx, cube->win, img.img, 0, 0);
+	mlx_destroy_image(cube->mlx, img.img);
+}
+
 void Raycaster(t_cube *cube)
 { 
 	int x;
@@ -154,11 +181,12 @@ void Raycaster(t_cube *cube)
 	x = 0;
 	while(x < SCREEN_W)
 	{
-		raycaster_var_init(cube->ray, cube->player, x);
+		raycaster_var_init(cube->ray, cube->player, cube->data,x);
 		calculate_dist(cube->ray, cube->player);
 		DDA(cube->ray, cube->data);
 		wall_calculations(cube->ray, cube->player);
 		update_pixel_map(cube->data, cube->ray, x);
 		x++;
-	}	
+	}
+	draw_pixel_map(cube, cube->data);
 } 
