@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:13:39 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/14 13:19:57 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/15 12:49:47 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,16 @@ void	double_check_map(t_data *data)
 	}
 }
 
+void	create_texture_buffer(t_data *data)
+{
+	int i;
+	
+	data->texture_buffer = safe_calloc(sizeof(int*), 4);
+	i = -1;
+	while(++i < 4)
+		data->texture_buffer[i] = safe_calloc(sizeof(int), 1);
+}
+
 t_data *init_data(char *file)
 {
 	t_data *data;
@@ -58,20 +68,62 @@ t_data *init_data(char *file)
 	data->rff_map = fill_rff_map(data->map);
 	rff_check(data, 1, 1);
 	double_check_map(data);
+	create_texture_buffer(data);
 	create_pixel_map(data);
 	return (data);
 }
 
-t_player *init_player(t_cube *cube)
+void	init_dir_plane_aux(t_player *p)
+{
+	if(p->start_dir == 'W')
+	{
+		p->dir_x = -1;
+		p->dir_y = 0;
+		p->plane_x = 0;
+		p->plane_y = 0.66;
+	}
+}
+
+void	init_dir_plane(t_player *p)
+{
+	if(p->start_dir == 'N')
+	{
+		p->dir_x = 0;
+		p->dir_y = -1;
+		p->plane_x = 0.66;
+		p->plane_y = 0;
+	}
+	if(p->start_dir == 'S')
+	{
+		p->dir_x = 0;
+		p->dir_y = 1;
+		p->plane_x = -0.66;
+		p->plane_y = 0;
+	}
+	if(p->start_dir == 'E')
+	{
+		p->dir_x = 1;
+		p->dir_y = 0;
+		p->plane_x = 0;
+		p->plane_y = 0.66;
+	}
+	init_dir_plane_aux(p);
+}
+
+t_player *init_player(t_data *data)
 {
 	t_player *p;
 
 	p = safe_calloc(sizeof(t_player), 1);
 	
-	p->p_x = cube->data->player_x + TILE_SIZE + TILE_SIZE / 2;
-	p->p_y = cube->data->player_y + TILE_SIZE + TILE_SIZE / 2;
+	p->start_dir = data->map[data->player_y][data->player_x];
+	p->p_x = data->player_x + TILE_SIZE + TILE_SIZE / 2;
+	p->p_y = data->player_y + TILE_SIZE + TILE_SIZE / 2;
 	p->fov_rd = (FOV * PI) / 180;
 	p->angle = PI;
+	p->movespeed = 1;
+	p->rotation_speed = 0.5;
+	init_dir_plane(p);
 	return (p);
 }
 
@@ -82,22 +134,17 @@ void game_start(t_data *data)
 	cube = safe_calloc(sizeof(t_cube), 1);
 	cube->data = data;
 	cube->ray = safe_calloc(sizeof(t_ray), 1);
-	cube->player = init_player(cube);
+	cube->player = init_player(cube->data);
 	cube->mlx = mlx_init();
 	cube->win = mlx_new_window(cube->mlx, SCREEN_W, SCREEN_H, "Cub3D");
 	mlx_hook(cube->win, 17, 0, close_cube, cube);
-	//print_map(cube->map);
-	//draw_floor(cube);
-	//draw_ceiling(cube);
-	//put_square(cube, SCREEN_W/2, SCREEN_H-50);
 	print_map(data->map);
 	Raycaster(cube);
 	load_textures(cube, cube->data);
+	draw_pixel_map(cube, cube->data);
 	mlx_key_hook(cube->win, key_press, cube);
 	mlx_loop(cube->mlx);
 }
-
-
 
 int main(int ac, char **av)
 {

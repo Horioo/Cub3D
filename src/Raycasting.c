@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 11:28:34 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/14 12:52:22 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/15 12:30:40 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void raycaster_var_init(t_ray *ray, t_player *player,t_data *data, int x)
 	ray->map_x = data->player_x;
 	ray->map_y = data->player_y;
 	ray->delta_dist_x = fabs(1 / ray->ray_dir_x);
-	ray->delta_dist_y = fabs(1 / ray->ray_dir_y);	
+	ray->delta_dist_y = fabs(1 / ray->ray_dir_y);
 }
 
 // Digital Differential Analysis
@@ -132,7 +132,7 @@ void update_pixel_map(t_data *data, t_ray *ray, int x)
 	ray->text_x = (int)(ray->wall_x * TILE_SIZE);
 	if(dir == W || dir == S)
 		ray->text_x = TILE_SIZE - ray->text_x - 1;
-	step = TILE_SIZE / ray->wall_height;
+	step = 1.0 * TILE_SIZE / ray->wall_height;
 	pos = (ray->start_pos_draw - SCREEN_H / 2 + ray->wall_height / 2) * step;
 	while(ray->start_pos_draw < ray->end_pos_draw)
 	{
@@ -162,11 +162,12 @@ void	draw_pixel_map(t_cube *cube, t_data *data)
 		x = -1;
 		while(++x < SCREEN_W)
 		{
+			//printf("pixel_map[%d][%d] = %d\n", y, x, data->pixel_map[y][x]);
 			if(data->pixel_map[y][x] > 0)
 				img.addr[y * (img.line_len / 4) + x] = data->pixel_map[y][x];
-			if(y < SCREEN_H / 2)
+			else if(y < SCREEN_H / 2)
 				img.addr[y * (img.line_len / 4) + x] = data->c_color->hex_color;
-			if(y < SCREEN_H - 1)
+			else if(y < SCREEN_H - 1)
 				img.addr[y * (img.line_len / 4) + x] = data->f_color->hex_color;
 		}
 	}
@@ -185,8 +186,7 @@ void Raycaster(t_cube *cube)
 		calculate_dist(cube->ray, cube->player);
 		DDA(cube->ray, cube->data);
 		wall_calculations(cube->ray, cube->player);
-		update_pixel_map(cube->data, cube->ray, x);
+		update_pixel_map(cube->data, cube->ray, x); // Esta a morrer aqui "2307452 floating point exception"
 		x++;
 	}
-	draw_pixel_map(cube, cube->data);
 } 

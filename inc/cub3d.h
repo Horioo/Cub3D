@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/14 12:54:04 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/15 12:46:23 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@
 # define S 2
 # define W 3
 //Screen Settings
-# define SCREEN_W 1920
-# define SCREEN_H 1080
+# define SCREEN_W 800
+# define SCREEN_H 800
 
 
 /*
@@ -67,14 +67,17 @@ typedef struct s_color
 
 typedef struct s_player
 {
-	int	p_x; //Posicao Jogador X em Pixeis
-	int p_y; //Posicao Jogador Y em Pixeis
-	double angle; //Angulo do Player
-	float fov_rd; //Field of View do Player em Radianos
-	double dir_x; //Direcao do jogador no eixo do x
-	double dir_y; //Direcao do jogador no eixo do y
-	double plane_x; //No Clue
-	double plane_y; //No Clue
+	int		p_x; //Posicao Jogador X em Pixeis
+	int 	p_y; //Posicao Jogador Y em Pixeis
+	double 	angle; //Angulo do Player
+	float 	fov_rd; //Field of View do Player em Radianos
+	double 	dir_x; //Direcao do jogador no eixo do x
+	double 	dir_y; //Direcao do jogador no eixo do y
+	double 	plane_x; //No Clue
+	double 	plane_y; //No Clue
+	char	start_dir; //direcao inicial do player
+	double	movespeed; //Velocidade do Player
+	double	rotation_speed; // Velocidade de Rotacao do player
 	
 } t_player;
 
@@ -210,5 +213,8 @@ void	*safe_calloc(size_t type, size_t bytes);
 //Raycasting
 void Raycaster(t_cube *cube);
 void create_pixel_map(t_data *data);
+
+//Render
+void	draw_pixel_map(t_cube *cube, t_data *data);
 
 #endif

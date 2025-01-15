@@ -21,6 +21,7 @@ FILES = src/cub3d.c \
 		src/utils.c \
 		src/rff.c \
 		src/Raycasting.c \
+		src/player.c \
 		$(GNL_FILES)
 
 

@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 11:12:03 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/14 13:19:37 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/15 12:28:41 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@ void	load_textures(t_cube *cube, t_data *data)
 	t_img 	tmp;
 	int		i;
 
-	i = 0;
-	while(i < 4)
-	{
+	i = -1;
+	while(++i < 4)
+	{	
 		tmp.img = mlx_xpm_file_to_image(cube->mlx, data->textures[i], &tmp.width, &tmp.height);
 		if(!tmp.img)
 			print_error("Error on file to image\n");
@@ -74,6 +74,5 @@ void	load_textures(t_cube *cube, t_data *data)
 			printf("Error on get data Addr\n");
 		img_to_texture_buff(data, &tmp, i);
 		mlx_destroy_image(cube->mlx, tmp.img);
-		printf("Image Done\n");
 	}
 }
