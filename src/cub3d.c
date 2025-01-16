@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:13:39 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/15 12:49:47 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:14:54 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,10 +121,21 @@ t_player *init_player(t_data *data)
 	p->p_y = data->player_y + TILE_SIZE + TILE_SIZE / 2;
 	p->fov_rd = (FOV * PI) / 180;
 	p->angle = PI;
-	p->movespeed = 1;
-	p->rotation_speed = 0.5;
+	p->movespeed = PLAYER_SPEED;
+	p->rotation_speed = ROTATION_SPEED;
 	init_dir_plane(p);
 	return (p);
+}
+
+int	 game_loop(t_cube *cube)
+{
+	if(!cube->win)
+		return (0);
+	move_player(cube->data, cube->player);
+	Raycaster(cube);
+	load_textures(cube, cube->data);
+	draw_pixel_map(cube, cube->data);
+	return (0);
 }
 
 void game_start(t_data *data)
@@ -136,12 +147,12 @@ void game_start(t_data *data)
 	cube->ray = safe_calloc(sizeof(t_ray), 1);
 	cube->player = init_player(cube->data);
 	cube->mlx = mlx_init();
-	cube->win = mlx_new_window(cube->mlx, SCREEN_W, SCREEN_H, "Cub3D");
-	mlx_hook(cube->win, 17, 0, close_cube, cube);
+	cube->win = mlx_new_window(cube->mlx, SCREEN_W, SCREEN_H, "Cub3D");	
 	print_map(data->map);
-	Raycaster(cube);
-	load_textures(cube, cube->data);
-	draw_pixel_map(cube, cube->data);
+	mlx_hook(cube->win, 17, 0, close_cube, cube);
+	mlx_hook(cube->win, 2, 0, key_press, cube);
+	mlx_hook(cube->win, 3, 0, key_release, cube);
+	mlx_loop_hook(cube->mlx, game_loop, cube);
 	mlx_key_hook(cube->win, key_press, cube);
 	mlx_loop(cube->mlx);
 }

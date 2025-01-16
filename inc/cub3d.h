@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/15 12:46:23 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:08:45 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@
 # define DOWN 115
 # define TILE_SIZE 64
 # define FOV 66
-# define ROTATION_SPEED 0.045
-# define PLAYER_SPEED 4
+# define ROTATION_SPEED 3
+# define PLAYER_SPEED 15
 
 // For Textures Array
 # define N 0
@@ -43,8 +43,8 @@
 # define S 2
 # define W 3
 //Screen Settings
-# define SCREEN_W 800
-# define SCREEN_H 800
+# define SCREEN_W 1920
+# define SCREEN_H 1080
 
 
 /*
@@ -78,6 +78,11 @@ typedef struct s_player
 	char	start_dir; //direcao inicial do player
 	double	movespeed; //Velocidade do Player
 	double	rotation_speed; // Velocidade de Rotacao do player
+	bool	m_forward;
+	bool	m_backward;
+	bool	m_left;
+	bool	m_right;
+	bool	is_moving;
 	
 } t_player;
 
@@ -178,6 +183,7 @@ double 	degrees_to_radians(double degrees);
 
 //Keys
 int 	key_press(int keycode, t_cube *cube);
+int 	key_release(int keycode, t_cube *cube);
 
 //Map Utils
 int 	search_for_big_line(char **map);
@@ -216,5 +222,12 @@ void create_pixel_map(t_data *data);
 
 //Render
 void	draw_pixel_map(t_cube *cube, t_data *data);
+
+//Player
+void	move_forward(t_data *data, t_player *p);
+void	move_backward(t_data *data, t_player *p);
+void	move_right(t_player *p);
+void	move_left(t_player *p);
+void	move_player(t_data *data, t_player *p);
 
 #endif
