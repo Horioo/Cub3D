@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 11:28:34 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/17 12:17:38 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:28:27 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,18 +71,15 @@ void DDA(t_ray *ray, t_data *data)
 		ray->wall_dist = ray->side_dist_x - ray->delta_dist_x;
 	else
 		ray->wall_dist = ray->side_dist_y - ray->delta_dist_y;
-	printf("Wall Distance = %f\n", ray->wall_dist);
 }
 
 void wall_calculations(t_ray *ray, t_player *player)
 {
 	ray->wall_height = (int)(SCREEN_H / ray->wall_dist);
 	ray->start_pos_draw = -ray->wall_height / 2 + SCREEN_H / 2;
-	//printf("Start Draw  = %d\n", ray->start_pos_draw);
 	if(ray->start_pos_draw < 0)
 		ray->start_pos_draw = 0;
 	ray->end_pos_draw = ray->wall_height / 2 + SCREEN_H / 2;
-	//printf("End Draw  = %d\n", ray->end_pos_draw);
 	if(ray->end_pos_draw >= SCREEN_H)
 		ray->end_pos_draw = SCREEN_H - 1;
 	if(ray->side == 0)
