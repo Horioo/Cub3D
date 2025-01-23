@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ajorge-p <ajorge-p@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/16 13:08:45 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/18 21:53:02 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@
 # define S 2
 # define W 3
 //Screen Settings
-# define SCREEN_W 1920
-# define SCREEN_H 1080
+# define SCREEN_W 1000
+# define SCREEN_H 800
 
 
 /*
