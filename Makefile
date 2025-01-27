@@ -19,7 +19,7 @@ FILES = src/cub3d.c \
 		src/map.c \
 		src/textures.c \
 		src/utils.c \
-		src/rff.c \
+		src/map_utils2.c \
 		src/Raycasting.c \
 		src/player.c \
 		$(GNL_FILES)

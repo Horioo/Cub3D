@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 11:15:01 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/17 11:46:59 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/27 15:12:52 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int key_press(int keycode, t_cube *cube)
 		cube->player->m_forward = true;
 	if(keycode == LEFT)
 		cube->player->m_left = true;
-	if(keycode == RIGHT)
+	if(keycode == RIGHT) 
 		cube->player->m_right = true;
 	return (0);
 }

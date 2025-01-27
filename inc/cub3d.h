@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:37:26 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/17 12:19:28 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/27 17:50:26 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@
 # define DOWN 115
 # define TILE_SIZE 64
 # define FOV 66
-# define ROTATION_SPEED 0.05
-# define PLAYER_SPEED 1
+# define ROTATION_SPEED 0.005
+# define PLAYER_SPEED 0.00001
 
 // For Textures Array
 # define N 0
@@ -43,8 +43,8 @@
 # define S 2
 # define W 3
 //Screen Settings
-# define SCREEN_W 1920
-# define SCREEN_H 1080
+# define SCREEN_W 600
+# define SCREEN_H 600
 
 
 /*
@@ -201,6 +201,7 @@ int		colum_maps(char *file);
 
 //RFF
 void 	rff_check(t_data *data, int x, int y);
+void 	check_map(t_data *data);
 
 //Textures
 char 	**get_textures(char *file);

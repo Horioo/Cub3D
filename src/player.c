@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 12:33:23 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/17 12:14:13 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/27 18:11:33 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ void	move_forward(t_data *data, t_player *p)
 	double	x;
 	double	y;
 
-	x = p->p_x + p->dir_x * p->movespeed;
-	y = p->p_y + p->dir_y * p->movespeed;
+	//x = (double)data->player_x + p->dir_x * p->movespeed;
+	//y = (double)data->player_y + p->dir_y * p->movespeed;
+	x = (double)p->p_x + p->dir_x * p->movespeed;
+	y = (double)p->p_y + p->dir_y * p->movespeed;
 	if(x < 0)
 		x = 0;
 	if (y < 0)
@@ -28,10 +30,9 @@ void	move_forward(t_data *data, t_player *p)
 	if(data->pixel_map[(int)y][p->p_x] == 0)
 		p->p_y += p->dir_y * p->movespeed;
 	if(p->p_x < 0)
-		p->p_x = 0;
+		p->p_x = 1;
 	if(p->p_y < 0)
-		p->p_y = 0;
-
+		p->p_y = 1;
 }
 
 void	move_backward(t_data *data, t_player *p)
@@ -39,8 +40,8 @@ void	move_backward(t_data *data, t_player *p)
 	double	x;
 	double	y;
 
-	x = p->p_x - p->dir_x * p->movespeed;
-	y = p->p_y - p->dir_y * p->movespeed;
+	x = (double)p->p_x - p->dir_x * p->movespeed;
+	y = (double)p->p_y - p->dir_y * p->movespeed;
 	if(x < 0)
 		x = 0;
 	if (y < 0)
@@ -49,10 +50,10 @@ void	move_backward(t_data *data, t_player *p)
 		p->p_x -= p->dir_x * p->movespeed;
 	if(data->pixel_map[(int)y][p->p_x] == 0)
 		p->p_y -= p->dir_y * p->movespeed;
-	if(p->p_x < 0)
-		p->p_x = 0;
-	if(p->p_y < 0)
-		p->p_y = 0;
+	if(p->p_x <= 0)
+		p->p_x = 2;
+	if(p->p_y <= 0)
+		p->p_y = 2;
 }
 
 void	move_right(t_player *p)

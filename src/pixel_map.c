@@ -6,7 +6,7 @@
 /*   By: ajorge-p <ajorge-p@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 11:12:59 by ajorge-p          #+#    #+#             */
-/*   Updated: 2025/01/17 12:11:36 by ajorge-p         ###   ########.fr       */
+/*   Updated: 2025/01/27 18:27:49 by ajorge-p         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void update_pixel_map(t_data *data, t_ray *ray, int x)
 	ray->text_x = (int)(ray->wall_x * TILE_SIZE);
 	if(dir == W || dir == S)
 		ray->text_x = TILE_SIZE - ray->text_x - 1;
-	step = 1.0 * TILE_SIZE / ray->wall_height;
+	step = (double)TILE_SIZE / ray->wall_height;
 	pos = (ray->start_pos_draw - SCREEN_H / 2 + ray->wall_height / 2) * step;
 	while(ray->start_pos_draw < ray->end_pos_draw)
 	{
